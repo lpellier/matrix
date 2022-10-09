@@ -1,6 +1,8 @@
 NAME	=		matrix
 
-SRCS	=		./main.cpp
+SRCS	=		\
+				./linear_combination.cpp \
+				./main.cpp 
 
 OBJS		=	$(SRCS:.c=.o)
 

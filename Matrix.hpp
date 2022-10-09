@@ -1,12 +1,6 @@
 #pragma once
 
-#include <iostream>
-#include <string>
-#include <cmath>
-#include <tuple>
-#include <vector>
-
-#include "Vector.hpp"
+#include "general.hpp"
 
 template <typename T>
 class Vector;
@@ -42,6 +36,27 @@ public:
 		this->contents = array(src.contents);
 		return *this;	
 	}
+	Vector<T> & operator[](size_t index) {
+		return this->contents[index];
+	}
+	Vector<T> operator[](size_t index) const {
+		return this->contents[index];
+	}
+
+	Matrix &	operator+=(const Matrix & rhs) {
+		this->add(rhs);
+		return *this;
+	}
+
+	Matrix &	operator-=(const Matrix & rhs) {
+		this->sub(rhs);
+		return *this;
+	}
+
+	Matrix &	operator*=(const double & rhs) {
+		this->scl(rhs);
+		return *this;
+	}
 
 	// accessors
 	std::tuple<size_t, size_t>		getSize(void) const { // cols, rows
@@ -56,35 +71,38 @@ public:
 
 		for (typename array::const_iterator ite = this->contents.begin(); ite != this->contents.end(); ite++) {
 			for (typename std::vector<T>::const_iterator ite2 = (*ite).contents.begin(); ite2 != (*ite).contents.end(); ite2++) {
-				ret.contents[index] = *ite2;
+				ret[index] = *ite2;
 				index++;
 			}
 		}
 		return ret;
 	}
 		
-	void	add(const Matrix & other) {
-		if (other.contents.size() != this->contents.size() || (this->contents.size() > 0 && this->contents[0].contents.size() != other.contents[0].contents.size())) {
+	Matrix &	add(const Matrix & other) {
+		if (other.contents.size() != this->contents.size() || (this->contents.size() > 0 && this->contents[0].contents.size() != other[0].contents.size())) {
 			std::cout << "Matrix Addition failed : different sizes" << std::endl;
-			return ;
+			return *this;
 		}
 		for (size_t i = 0; i < this->contents.size(); i++) {
-			this->contents[i].add(other.contents[i]);
+			this->contents[i].add(other[i]);
 		}
+		return *this;
 	}
-	void	sub(const Matrix & other) {
-		if (other.contents.size() != this->contents.size() || (this->contents.size() > 0 && this->contents[0].contents.size() != other.contents[0].contents.size())) {
+	Matrix &	sub(const Matrix & other) {
+		if (other.contents.size() != this->contents.size() || (this->contents.size() > 0 && this->contents[0].contents.size() != other[0].contents.size())) {
 			std::cout << "Matrix Substraction failed : different sizes" << std::endl;
-			return ;
+			return *this;
 		}
 		for (size_t i = 0; i < this->contents.size(); i++) {
-			this->contents[i].sub(other.contents[i]);
+			this->contents[i].sub(other[i]);
 		}
+		return *this;
 	}
-	void	scl(const T & scalar) {
+	Matrix &	scl(const T & scalar) {
 		for (size_t i = 0; i < this->contents.size(); i++) {
 			this->contents[i].scl(scalar);
 		}
+		return *this;
 	}
 };
 
@@ -97,7 +115,7 @@ std::ostream & operator<<(std::ostream & os, const Matrix<T> & mat) {
 		for (size_t lines = 0; lines < contents[0].contents.size(); lines++) {
 			os << "[";
 			for (size_t cols = 0; cols < contents.size(); cols++) {
-				os << " " << contents[cols].contents[lines] << " ";  
+				os << " " << contents[cols][lines] << " ";  
 			}
 			os << "]" << std::endl;
 		}
