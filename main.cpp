@@ -1,28 +1,5 @@
 #include "general.hpp"
 
-template <typename T>
-Vector<T>	linear_combination(std::vector<Vector<T>> vecs, std::vector<T> coefs) {
-	if (vecs.size() == 0 || vecs.size() != coefs.size())
-		return Vector<T>();
-	Vector<T> ret(vecs[0].contents.size());
-	for (size_t i = 0; i < coefs.size(); i++) {
-		vecs[i].scl(coefs[i]);
-		ret.add(vecs[i]);
-	}
-	return ret;
-}
-
-// linear interpolation between two values a and b
-// interpolate(a, b, t) -> (b - a) * t + a
-template <typename V>
-V	lerp(const V & u, const V & v, double t) {
-	V res = v;
-	res -= u;
-	res *= t;
-	res += u;
-	return res;
-}
-
 int main() {
 	// {	
 	// 	std::cout << "Vector initialization" << std::endl;
@@ -118,53 +95,53 @@ int main() {
 	// 	test_mat.scl(5);
 	// 	std::cout << test_mat;
 	// }
-	// {
-	// 	std::cout << "Linear Combination" << std::endl;
-	// 	Vector<double> e1(3, 1.0, 0.0, 0.0);
-	// 	Vector<double> e2(3, 0.0, 1.0, 0.0);
-	// 	Vector<double> e3(3, 0.0, 0.0, 1.0);
-
-	// 	Vector<double> v1(3, 1.0, 2.0, 3.0);
-	// 	Vector<double> v2(3, 0.0, 10.0, -100.0);
-
-	// 	std::vector<Vector<double>> e;
-	// 	std::vector<double>			e_coeffs;
-	// 	e.push_back(e1);
-	// 	e.push_back(e2);
-	// 	e.push_back(e3);
-	// 	e_coeffs.push_back(10);
-	// 	e_coeffs.push_back(-2);
-	// 	e_coeffs.push_back(0.5);
-	// 	std::vector<Vector<double>> v;
-	// 	std::vector<double>			v_coeffs;
-	// 	v.push_back(v1);
-	// 	v.push_back(v2);
-	// 	v_coeffs.push_back(10);
-	// 	v_coeffs.push_back(-2);
-	// 	std::cout << linear_combination<double>(e, e_coeffs) << std::endl;
-	// 	std::cout << linear_combination<double>(v, v_coeffs) << std::endl;
-	// }
 	{
-		std::cout << "Linear Interpolation" << std::endl;
-		Vector<double>	v1 = Vector<double>(2, 2.0, 1.0);
-		Vector<double>	v2 = Vector<double>(2, 4.0, 2.0);
-		Vector<double>	v3 = Vector<double>(2, 3.0, 4.0);
-		Vector<double>	v4 = Vector<double>(2, 20.0, 10.0);
-		Vector<double>	v5 = Vector<double>(2, 30.0, 40.0);
+		std::cout << "Linear Combination" << std::endl;
+		Vector<double> e1(3, 1.0, 0.0, 0.0);
+		Vector<double> e2(3, 0.0, 1.0, 0.0);
+		Vector<double> e3(3, 0.0, 0.0, 1.0);
 
-		std::cout << lerp<double>(0.0, 1.0, 0.0) << std::endl;
-		std::cout << lerp<double>(0.0, 1.0, 1.0) << std::endl;
-		std::cout << lerp<double>(0.0, 1.0, 0.5) << std::endl;
-		std::cout << lerp<double>(21.0, 42.0, 0.3) << std::endl;
-		std::cout << lerp<Vector<double>>(v1, v2, 0.3) << std::endl;
+		Vector<double> v1(3, 1.0, 2.0, 3.0);
+		Vector<double> v2(3, 0.0, 10.0, -100.0);
 
-		Matrix<double> m1(2, 1);
-		m1[0] = v1;
-		m1[1] = v3;
-		Matrix<double> m2(2, 1);
-		m2[0] = v4;
-		m2[1] = v5;
-		std::cout << lerp<Matrix<double>>(m1, m2, 0.5) << std::endl;
+		std::vector<Vector<double>> e;
+		std::vector<double>			e_coeffs;
+		e.push_back(e1);
+		e.push_back(e2);
+		e.push_back(e3);
+		e_coeffs.push_back(10);
+		e_coeffs.push_back(-2);
+		e_coeffs.push_back(0.5);
+		std::vector<Vector<double>> v;
+		std::vector<double>			v_coeffs;
+		v.push_back(v1);
+		v.push_back(v2);
+		v_coeffs.push_back(10);
+		v_coeffs.push_back(-2);
+		std::cout << linear_combination<double>(e, e_coeffs) << std::endl;
+		std::cout << linear_combination<double>(v, v_coeffs) << std::endl;
 	}
+	// {
+	// 	std::cout << "Linear Interpolation" << std::endl;
+	// 	Vector<double>	v1 = Vector<double>(2, 2.0, 1.0);
+	// 	Vector<double>	v2 = Vector<double>(2, 4.0, 2.0);
+	// 	Vector<double>	v3 = Vector<double>(2, 3.0, 4.0);
+	// 	Vector<double>	v4 = Vector<double>(2, 20.0, 10.0);
+	// 	Vector<double>	v5 = Vector<double>(2, 30.0, 40.0);
+
+	// 	std::cout << lerp<double>(0.0, 1.0, 0.0) << std::endl;
+	// 	std::cout << lerp<double>(0.0, 1.0, 1.0) << std::endl;
+	// 	std::cout << lerp<double>(0.0, 1.0, 0.5) << std::endl;
+	// 	std::cout << lerp<double>(21.0, 42.0, 0.3) << std::endl;
+	// 	std::cout << lerp<Vector<double>>(v1, v2, 0.3) << std::endl;
+
+	// 	Matrix<double> m1(2, 1);
+	// 	m1[0] = v1;
+	// 	m1[1] = v3;
+	// 	Matrix<double> m2(2, 1);
+	// 	m2[0] = v4;
+	// 	m2[1] = v5;
+	// 	std::cout << lerp<Matrix<double>>(m1, m2, 0.5) << std::endl;
+	// }
 	exit(0);
 }

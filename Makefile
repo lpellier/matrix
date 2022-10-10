@@ -1,8 +1,7 @@
 NAME	=		matrix
 
-SRCS	=		\
-				./linear_combination.cpp \
-				./main.cpp 
+SRCS	=		./main.cpp \
+				./linear_combination.cpp
 
 OBJS		=	$(SRCS:.c=.o)
 
@@ -16,7 +15,7 @@ $(NAME)		:	$(OBJS)
 all			:	$(NAME)
 
 fclean		:	
-				rm -rf $(NAME)
+				rm -rf $(NAME) $(NAME).dSYM
 
 re			:	fclean all
 
