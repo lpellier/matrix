@@ -22,6 +22,13 @@ public:
 	Matrix(size_t col_nbr, size_t row_nbr) {
 		this->contents = array(col_nbr, Vector<T>(row_nbr));
 	}
+	Matrix(size_t col_nbr, size_t row_nbr, T * contents[]) {
+		this->contents = array();
+		for (size_t i = 0; i < col_nbr; i++) {
+			Vector<T>	cur(row_nbr, contents[i]);
+			this->contents.push_back(cur);
+		}
+	}
 
 	// destructor
 	~Matrix(void) {
@@ -53,7 +60,7 @@ public:
 		return *this;
 	}
 
-	Matrix &	operator*=(const double & rhs) {
+	Matrix &	operator*=(const float & rhs) {
 		this->scl(rhs);
 		return *this;
 	}
@@ -79,20 +86,12 @@ public:
 	}
 		
 	Matrix &	add(const Matrix & other) {
-		if (other.contents.size() != this->contents.size() || (this->contents.size() > 0 && this->contents[0].contents.size() != other[0].contents.size())) {
-			std::cout << "Matrix Addition failed : different sizes" << std::endl;
-			return *this;
-		}
 		for (size_t i = 0; i < this->contents.size(); i++) {
 			this->contents[i].add(other[i]);
 		}
 		return *this;
 	}
 	Matrix &	sub(const Matrix & other) {
-		if (other.contents.size() != this->contents.size() || (this->contents.size() > 0 && this->contents[0].contents.size() != other[0].contents.size())) {
-			std::cout << "Matrix Substraction failed : different sizes" << std::endl;
-			return *this;
-		}
 		for (size_t i = 0; i < this->contents.size(); i++) {
 			this->contents[i].sub(other[i]);
 		}

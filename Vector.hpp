@@ -19,17 +19,14 @@ public:
 	Vector(const array & contents) {
 		this->contents = array(contents);
 	}
-	Vector(int count, ...) {
+	Vector(size_t size, T * contents) {
 		this->contents = array();
-		va_list args;
-		va_start(args, count);
-		for (int i = 0; i < count; i++) {
-			this->contents.push_back(va_arg(args, T));
+		for (size_t i = 0; i < size; i++) {
+			this->contents.push_back(contents[i]);
 		}
-		va_end(args);
 	}
 	Vector(size_t size) {
-		this->contents = array(size, 0);
+		this->contents = array(size, T());
 	}
 
 	// destructor
@@ -63,7 +60,7 @@ public:
 		return *this;
 	}
 
-	Vector &	operator*=(const double & rhs) {
+	Vector &	operator*=(const float & rhs) {
 		this->scl(rhs);
 		return *this;
 	}
@@ -76,7 +73,7 @@ public:
 	// methods
 	Matrix<T>	reshapeIntoMatrix(size_t col_nbr) const {
 		// ? Matrix of col_nbr columns and ceil(length(vec) / col_nbr) rows
-		size_t line_nbr = static_cast<size_t>(ceil(static_cast<double>(this->contents.size()) / col_nbr));
+		size_t line_nbr = static_cast<size_t>(ceil(static_cast<float>(this->contents.size()) / col_nbr));
 		Matrix<T> ret(col_nbr, line_nbr);
 		typename array::const_iterator ite = this->contents.begin();
 
@@ -90,20 +87,12 @@ public:
 	}
 
 	Vector &	add(const Vector & other) {
-		if (other.contents.size() != this->contents.size()) {
-			std::cout << "Vector Addition failed : different sizes" << std::endl;
-			return *this;
-		}
 		for (size_t i = 0; i < this->contents.size(); i++) {
 			this->contents[i] += other[i];
 		}
 		return *this;
 	}
 	Vector &	sub(const Vector & other) {
-		if (other.contents.size() != this->contents.size()) {
-			std::cout << "Vector Substraction failed : different sizes" << std::endl;
-			return *this;
-		}
 		for (size_t i = 0; i < this->contents.size(); i++) {
 			this->contents[i] -= other[i];
 		}
@@ -114,6 +103,47 @@ public:
 			this->contents[i] *= scalar;
 		}
 		return *this;
+	}
+
+	T		dot(const Vector & v) const {
+		T result = 0;
+		for (size_t i = 0; i < this->contents.size(); i++) {
+			result += this->contents[i] * v.contents[i];
+		}
+		return result;
+	}
+
+	// v a vector(a1, a2, a3)
+	// taxicab norm or manhattan norm
+	// norm_1 = |a1| + |a2| + |a3|
+	float	norm_1() const {
+		float result = 0;
+
+		for (size_t i = 0; i < this->contents.size(); i++) {
+			result += abs(this->contents[i]);
+		}
+		return result;
+	}
+	// euclidian norm
+	// norm = sqrt(a1^2 + a2^2 + a3^2)
+	float	norm() const {
+		float result = 0;
+		for (size_t i = 0; i < this->contents.size(); i++) {
+			result += pow(this->contents[i], 2);
+		}
+		result = sqrt(result);
+		return result;
+	}
+	// supremum norm
+	// norm_inf = max(|a1|, |a2|, |a3|)
+	float	norm_inf() const {
+		float result = 0;
+		for (size_t i = 0; i < this->contents.size(); i++) {
+			if (abs(this->contents[i]) > result) {
+				result = abs(this->contents[i]);
+			}
+		}
+		return result;
 	}
 };
 

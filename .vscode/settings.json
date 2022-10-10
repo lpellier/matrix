@@ -59,6 +59,17 @@
 		"typeinfo": "cpp",
 		"unordered_map": "cpp",
 		"variant": "cpp",
-		"algorithm": "cpp"
+		"algorithm": "cpp",
+		"bit": "cpp",
+		"*.tcc": "cpp",
+		"deque": "cpp",
+		"functional": "cpp",
+		"iterator": "cpp",
+		"memory_resource": "cpp",
+		"numeric": "cpp",
+		"random": "cpp",
+		"utility": "cpp",
+		"numbers": "cpp",
+		"ranges": "cpp"
 	}
 }

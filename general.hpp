@@ -11,8 +11,6 @@
 
 template <typename T>
 Vector<T>	linear_combination(std::vector<Vector<T>> vecs, std::vector<T> coefs) {
-	if (vecs.size() == 0 || vecs.size() != coefs.size())
-		return Vector<T>();
 	Vector<T> ret(vecs[0].contents.size());
 	for (size_t i = 0; i < coefs.size(); i++) {
 		vecs[i].scl(coefs[i]);
@@ -24,10 +22,16 @@ Vector<T>	linear_combination(std::vector<Vector<T>> vecs, std::vector<T> coefs) 
 // linear interpolation between two values a and b
 // interpolate(a, b, t) -> (b - a) * t + a
 template <typename V>
-V	lerp(const V & u, const V & v, double t) {
+V	lerp(const V & u, const V & v, float t) {
 	V res = v;
 	res -= u;
 	res *= t;
 	res += u;
 	return res;
+}
+
+template<typename K>
+float	angle_cos(const Vector<K> & u, const Vector<K> & v) {
+	float result = u.dot(v) / (u.norm() * v.norm());
+	return result;
 }
