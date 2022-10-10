@@ -35,3 +35,6 @@ float	angle_cos(const Vector<K> & u, const Vector<K> & v) {
 	float result = u.dot(v) / (u.norm() * v.norm());
 	return result;
 }
+
+// need sine
+// sine = sqrt(1 - angle_cos(u, v)^2)
