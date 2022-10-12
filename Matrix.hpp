@@ -19,13 +19,13 @@ public:
 	Matrix(const array & contents) {
 		this->contents = array(contents);
 	}
-	Matrix(size_t col_nbr, size_t row_nbr) {
-		this->contents = array(col_nbr, Vector<K>(row_nbr));
+	Matrix(size_t rows, size_t cols) {
+		this->contents = array(rows, Vector<K>(cols));
 	}
-	Matrix(size_t col_nbr, size_t row_nbr, K * contents[]) {
+	Matrix(size_t rows, size_t cols, K * contents[]) {
 		this->contents = array();
-		for (size_t i = 0; i < col_nbr; i++) {
-			Vector<K>	cur(row_nbr, contents[i]);
+		for (size_t i = 0; i < rows; i++) {
+			Vector<K>	cur(cols, contents[i]);
 			this->contents.push_back(cur);
 		}
 	}
@@ -118,9 +118,89 @@ public:
 		return result;
 	}
 	
-	// Matrix	mul_mat(const Matrix & vec) {
+	Vector<K>	get_vertical_vector_at_index(size_t index) const {
+		Vector<K> ret(this->contents.size());
+
+		for (size_t i = 0; i < this->contents.size(); i++) {
+			ret[i] = (*this)[i][index];
+		}
+		return ret;
+	}
+
+	Matrix	mul_mat(const Matrix & mat) const {
+		size_t rows = std::get<0>(this->getSize());
+		size_t cols = std::get<1>(mat.getSize());
 		
-	// }
+		Matrix	result(rows, cols);
+
+		for (size_t i = 0; i < rows; i++) {
+			for (size_t j = 0; j < cols; j++) {
+				result[i][j] = (*this)[i].dot(mat.get_vertical_vector_at_index(j)); 
+			}
+		}
+		return result;
+	}
+
+	K	trace() const {
+		size_t row = 0;
+		size_t col = 0;
+		K result = K();
+		
+		while (row < std::get<1>(this->getSize()) && col < std::get<0>(this->getSize())) {
+			result += (*this)[row][col];
+			row++;
+			col++;
+		}
+		return result;
+	}
+
+	Matrix	transpose() const {
+		Matrix	result(std::get<1>(this->getSize()), std::get<0>(this->getSize()));
+
+		for (size_t i = 0; i < std::get<1>(this->getSize()); i++) {
+			result[i] = this->get_vertical_vector_at_index(i);
+		}
+		return result;
+	}
+
+	Matrix row_echelon() const {
+		size_t lead = 0;
+		size_t row_count = std::get<0>(this->getSize());
+		size_t col_count = std::get<1>(this->getSize());
+
+		Matrix M(*this);
+
+		for (size_t r = 0; r < row_count && lead < col_count; r++) {
+			size_t i = r;
+
+			while (M[i][lead] == 0) {
+				i++;
+				if (i >= row_count) {
+					i = r;
+					lead++;
+					if (lead >= col_count)
+						return M;
+				}
+			}
+			Vector<K> tmp = M[i];
+			M[i] = M[r];
+			M[r] = tmp;
+
+			M[r].scl(1 / M[r][lead]);
+			for (i = 0; i < row_count; i++) {
+				if (i != r) {
+					for (size_t j = 0; j < col_count; j++) {
+						M[i][j] += -M[i][lead] * M[r][j];
+					}
+				}
+			}
+
+		}
+		
+
+		return M;
+	}
+
 };
 
 template <typename K>
@@ -129,12 +209,8 @@ std::ostream & operator<<(std::ostream & os, const Matrix<K> & mat) {
 	if (contents.size() == 0)
 		os << "[]" << std::endl;
 	else {
-		for (size_t lines = 0; lines < contents[0].contents.size(); lines++) {
-			os << "[";
-			for (size_t cols = 0; cols < contents.size(); cols++) {
-				os << " " << contents[cols][lines] << " ";  
-			}
-			os << "]" << std::endl;
+		for (size_t i = 0; i < contents.size(); i++) {
+			os << contents[i];
 		}
 	}
 	return os;

@@ -65,6 +65,12 @@ public:
 		return *this;
 	}
 
+	Vector 	operator*(const float & rhs) const {
+		Vector ret(*this);
+		ret.scl(rhs);
+		return ret;
+	}
+
 	// accessors
 	size_t			getSize(void) const {
 		return this->contents.size();
@@ -150,13 +156,10 @@ public:
 template <typename K>
 std::ostream & operator<<(std::ostream & os, const Vector<K> & vec) {
 	std::vector<K> contents = vec.contents;
-	if (contents.size() == 0) {
-		std::cout << "[]" << std::endl;
+	os << "[ ";
+	for (typename std::vector<K>::const_iterator ite = contents.begin(); ite != contents.end(); ite++) {
+		os << *ite << " ";
 	}
-	else {
-		for (typename std::vector<K>::const_iterator ite = contents.begin(); ite != contents.end(); ite++) {
-			os << "[ " << *ite << " ]" << std::endl;
-		}
-	}
+	os << "]" << std::endl;
 	return os;
 }
