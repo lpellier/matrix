@@ -2,13 +2,13 @@
 
 #include "general.hpp"
 
-template <typename T>
+template <typename K>
 class Matrix;
 
-template <typename T>
+template <typename K>
 class Vector {
 public:
-	typedef typename std::vector<T>	array;
+	typedef typename std::vector<K>	array;
 	// data
 	array	contents;
 	// default constructor
@@ -19,14 +19,14 @@ public:
 	Vector(const array & contents) {
 		this->contents = array(contents);
 	}
-	Vector(size_t size, T * contents) {
+	Vector(size_t size, K * contents) {
 		this->contents = array();
 		for (size_t i = 0; i < size; i++) {
 			this->contents.push_back(contents[i]);
 		}
 	}
 	Vector(size_t size) {
-		this->contents = array(size, T());
+		this->contents = array(size, K());
 	}
 
 	// destructor
@@ -43,10 +43,10 @@ public:
 		return *this;	
 	}
 
-	T & operator[](size_t index) {
+	K & operator[](size_t index) {
 		return this->contents[index];
 	}
-	T  operator[](size_t index) const {
+	K  operator[](size_t index) const {
 		return this->contents[index];
 	}
 
@@ -71,10 +71,10 @@ public:
 	}
 
 	// methods
-	Matrix<T>	reshapeIntoMatrix(size_t col_nbr) const {
+	Matrix<K>	reshapeIntoMatrix(size_t col_nbr) const {
 		// ? Matrix of col_nbr columns and ceil(length(vec) / col_nbr) rows
 		size_t line_nbr = static_cast<size_t>(ceil(static_cast<float>(this->contents.size()) / col_nbr));
-		Matrix<T> ret(col_nbr, line_nbr);
+		Matrix<K> ret(col_nbr, line_nbr);
 		typename array::const_iterator ite = this->contents.begin();
 
 		for (size_t cols = 0; cols < col_nbr; cols++) {
@@ -98,15 +98,15 @@ public:
 		}
 		return *this;
 	}
-	Vector &	scl(const T & scalar) {
+	Vector &	scl(const K & scalar) {
 		for (size_t i = 0; i < this->contents.size(); i++) {
 			this->contents[i] *= scalar;
 		}
 		return *this;
 	}
 
-	T		dot(const Vector & v) const {
-		T result = 0;
+	K		dot(const Vector & v) const {
+		K result = 0;
 		for (size_t i = 0; i < this->contents.size(); i++) {
 			result += this->contents[i] * v.contents[i];
 		}
@@ -147,14 +147,14 @@ public:
 	}
 };
 
-template <typename T>
-std::ostream & operator<<(std::ostream & os, const Vector<T> & vec) {
-	std::vector<T> contents = vec.contents;
+template <typename K>
+std::ostream & operator<<(std::ostream & os, const Vector<K> & vec) {
+	std::vector<K> contents = vec.contents;
 	if (contents.size() == 0) {
 		std::cout << "[]" << std::endl;
 	}
 	else {
-		for (typename std::vector<T>::const_iterator ite = contents.begin(); ite != contents.end(); ite++) {
+		for (typename std::vector<K>::const_iterator ite = contents.begin(); ite != contents.end(); ite++) {
 			os << "[ " << *ite << " ]" << std::endl;
 		}
 	}

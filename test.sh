@@ -10,12 +10,12 @@ RESET="\e[0m"
 
 _execute() {
 	clear
-	g++ -Wall -Werror -Wextra -g3 $1
+	g++ -Wall -Werror -Wextra -g3 --std=c++17 $1
 	if [[ $? -ne 0 ]]; then
 		return 1;
 	fi
 	./a.out
-	rm -rf a.out
+	rm -rf a.out*
 }
 
 if [[ $# -eq 1 && -f "$1" ]]; then

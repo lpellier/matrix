@@ -2,13 +2,13 @@
 
 #include "general.hpp"
 
-template <typename T>
+template <typename K>
 class Vector;
 
-template <typename T>
+template <typename K>
 class Matrix {
 public:
-	typedef typename std::vector<Vector<T>>	array;
+	typedef typename std::vector<Vector<K> >	array;
 	// data
 	array	contents;
 	// default constructor
@@ -20,12 +20,12 @@ public:
 		this->contents = array(contents);
 	}
 	Matrix(size_t col_nbr, size_t row_nbr) {
-		this->contents = array(col_nbr, Vector<T>(row_nbr));
+		this->contents = array(col_nbr, Vector<K>(row_nbr));
 	}
-	Matrix(size_t col_nbr, size_t row_nbr, T * contents[]) {
+	Matrix(size_t col_nbr, size_t row_nbr, K * contents[]) {
 		this->contents = array();
 		for (size_t i = 0; i < col_nbr; i++) {
-			Vector<T>	cur(row_nbr, contents[i]);
+			Vector<K>	cur(row_nbr, contents[i]);
 			this->contents.push_back(cur);
 		}
 	}
@@ -43,10 +43,10 @@ public:
 		this->contents = array(src.contents);
 		return *this;	
 	}
-	Vector<T> & operator[](size_t index) {
+	Vector<K> & operator[](size_t index) {
 		return this->contents[index];
 	}
-	Vector<T> operator[](size_t index) const {
+	Vector<K> operator[](size_t index) const {
 		return this->contents[index];
 	}
 
@@ -71,13 +71,13 @@ public:
 	}
 
 	// methods
-	Vector<T> reshapeIntoVector() const {
+	Vector<K> reshapeIntoVector() const {
 		std::tuple<size_t, size_t> size = this->getSize();
-		Vector<T> ret(std::get<0>(size) * std::get<1>(size));
+		Vector<K> ret(std::get<0>(size) * std::get<1>(size));
 		size_t index = 0;
 
 		for (typename array::const_iterator ite = this->contents.begin(); ite != this->contents.end(); ite++) {
-			for (typename std::vector<T>::const_iterator ite2 = (*ite).contents.begin(); ite2 != (*ite).contents.end(); ite2++) {
+			for (typename std::vector<K>::const_iterator ite2 = (*ite).contents.begin(); ite2 != (*ite).contents.end(); ite2++) {
 				ret[index] = *ite2;
 				index++;
 			}
@@ -97,17 +97,35 @@ public:
 		}
 		return *this;
 	}
-	Matrix &	scl(const T & scalar) {
+	Matrix &	scl(const K & scalar) {
 		for (size_t i = 0; i < this->contents.size(); i++) {
 			this->contents[i].scl(scalar);
 		}
 		return *this;
 	}
+
+	Vector<K>	mul_vec(const Vector<K> & vec) const {
+		Vector<K> result(vec.getSize());
+		size_t vec_size = vec.getSize();
+
+		for (size_t i = 0; i < vec_size; i++) {
+			K coordinate = K();
+			for (size_t j = 0; j < (*this)[i].getSize(); j++) {
+				coordinate += (*this)[i][j] * vec[j];
+			}
+			result[i] = coordinate;
+		}
+		return result;
+	}
+	
+	// Matrix	mul_mat(const Matrix & vec) {
+		
+	// }
 };
 
-template <typename T>
-std::ostream & operator<<(std::ostream & os, const Matrix<T> & mat) {
-	std::vector<Vector<T>> contents = mat.contents;
+template <typename K>
+std::ostream & operator<<(std::ostream & os, const Matrix<K> & mat) {
+	std::vector<Vector<K>> contents = mat.contents;
 	if (contents.size() == 0)
 		os << "[]" << std::endl;
 	else {

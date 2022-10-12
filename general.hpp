@@ -9,9 +9,9 @@
 #include "Matrix.hpp"
 #include "Vector.hpp"
 
-template <typename T>
-Vector<T>	linear_combination(std::vector<Vector<T>> vecs, std::vector<T> coefs) {
-	Vector<T> ret(vecs[0].contents.size());
+template <typename K>
+Vector<K>	linear_combination(std::vector<Vector<K>> vecs, std::vector<K> coefs) {
+	Vector<K> ret(vecs[0].contents.size());
 	for (size_t i = 0; i < coefs.size(); i++) {
 		vecs[i].scl(coefs[i]);
 		ret.add(vecs[i]);
@@ -36,5 +36,21 @@ float	angle_cos(const Vector<K> & u, const Vector<K> & v) {
 	return result;
 }
 
-// need sine
 // sine = sqrt(1 - angle_cos(u, v)^2)
+template<typename K>
+float	angle_sine(const Vector<K> & u, const Vector<K> & v) {
+	float result = sqrt(1 - pow(angle_cos(u, v), 2));
+	return result;
+}
+
+template<typename K>
+Vector<K>	cross_product(const Vector<K> & u, const Vector<K> & v) {
+	K coordinates[] = { 
+		u[1]*v[2] - u[2]*v[1],
+		u[2]*v[0] - u[0]*v[2],
+		u[0]*v[1] - u[1]*v[0]
+		};
+	Vector<K>	result(3, coordinates);
+	
+	return result;
+}
