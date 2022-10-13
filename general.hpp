@@ -6,6 +6,7 @@
 #include <cmath>
 #include <vector>
 #include <tuple>
+#include <iomanip>
 #include "Matrix.hpp"
 #include "Vector.hpp"
 

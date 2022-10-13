@@ -84,6 +84,10 @@ public:
 		}
 		return ret;
 	}
+
+	bool	isSquare() const {
+		return std::get<0>(this->getSize()) == std::get<1>(this->getSize());
+	}
 		
 	Matrix &	add(const Matrix & other) {
 		for (size_t i = 0; i < this->contents.size(); i++) {
@@ -189,18 +193,134 @@ public:
 			M[r].scl(1 / M[r][lead]);
 			for (i = 0; i < row_count; i++) {
 				if (i != r) {
-					for (size_t j = 0; j < col_count; j++) {
-						M[i][j] += -M[i][lead] * M[r][j];
-					}
+					M[i] -= M[r] * M[i][lead];
 				}
 			}
-
 		}
-		
-
 		return M;
 	}
 
+	K	determinant2d(const Matrix & mat) const {
+		K result = mat[0][0] * mat[1][1] - mat[0][1] * mat[1][0];
+		return result;
+	}
+	
+	K	determinant3d(const Matrix & mat) const {
+		K result;
+		Matrix	left(2, 2);
+		Matrix	center(2, 2);
+		Matrix	right(2, 2);
+		left[0][0] = mat[1][0];
+		left[0][1] = mat[1][1];
+		left[1][0] = mat[2][0];
+		left[1][1] = mat[2][1];
+
+		center[0][0] = mat[1][0];
+		center[0][1] = mat[1][2];
+		center[1][0] = mat[2][0];
+		center[1][1] = mat[2][2];
+		
+		right[0][0] = mat[1][1];
+		right[0][1] = mat[1][2];
+		right[1][0] = mat[2][1];
+		right[1][1] = mat[2][2];
+	
+		result = mat[0][0] * determinant2d(right) - mat[0][1] * determinant2d(center) + mat[0][2] * determinant2d(left);
+		return result;
+	}
+
+	K determinant4d(const Matrix & mat) const {
+		K result;
+
+		K left_n1[] = {mat[1][0], mat[1][1], mat[1][2]};
+		K left_n2[] = {mat[2][0], mat[2][1], mat[2][2]};
+		K left_n3[] = {mat[3][0], mat[3][1], mat[3][2]};
+		K * left_n[] = {left_n1, left_n2, left_n3};
+
+		K center_left_n1[] = {mat[1][0], mat[1][1], mat[1][3]};
+		K center_left_n2[] = {mat[2][0], mat[2][1], mat[2][3]};
+		K center_left_n3[] = {mat[3][0], mat[3][1], mat[3][3]};
+		K * center_left_n[] = {center_left_n1, center_left_n2, center_left_n3};
+
+		K center_right_n1[] = {mat[1][0], mat[1][2], mat[1][3]};
+		K center_right_n2[] = {mat[2][0], mat[2][2], mat[2][3]};
+		K center_right_n3[] = {mat[3][0], mat[3][2], mat[3][3]};
+		K * center_right_n[] = {center_right_n1, center_right_n2, center_right_n3};
+
+		K right_n1[] = {mat[1][1], mat[1][2], mat[1][3]};
+		K right_n2[] = {mat[2][1], mat[2][2], mat[2][3]};
+		K right_n3[] = {mat[3][1], mat[3][2], mat[3][3]};
+		K * right_n[] = {right_n1, right_n2, right_n3};
+
+		Matrix	left(3, 3, left_n);
+		Matrix	center_left(3, 3, center_left_n);
+		Matrix	center_right(3, 3, center_right_n);
+		Matrix	right(3, 3, right_n);
+
+		result = mat[0][0] * determinant3d(right) - mat[0][1] * determinant3d(center_right) + mat[0][2] * determinant3d(center_left) - mat[0][3] * determinant3d(left);
+		return result;
+	}
+
+	K	determinant() const {
+		if (!this->isSquare())
+			return K();
+		else if (this->contents.size() == 2)
+			return determinant2d(*this);
+		else if (this->contents.size() == 3)
+			return determinant3d(*this);
+		else if (this->contents.size() == 4)
+			return determinant4d(*this);
+		else
+			return K();
+	}
+
+	K	cofactor(size_t i, size_t j) const {
+		Matrix deleted(std::get<0>(this->getSize()) - 1, std::get<1>(this->getSize()) - 1);
+		size_t row_index = 0;
+		size_t col_index = 0;
+
+		for (size_t row = 0; row < this->contents.size(); row++) {
+			if (row != i) {
+				for (size_t col = 0; col < (*this)[row].contents.size(); col++) {
+					if (col != j) {
+						deleted[row_index][col_index] = (*this)[row][col];
+						col_index++;
+						if (col_index > std::get<1>(this->getSize()) - 2)
+							col_index = 0;
+					}
+				}
+				row_index++;
+			}
+		}
+
+		K result = std::pow(-1, i + 1 + j + 1) * deleted.determinant();
+		return result;
+	}
+
+	Matrix inverse() const {
+		Matrix result(std::get<0>(this->getSize()), std::get<1>(this->getSize()));
+
+		for (size_t i = 0; i < std::get<0>(this->getSize()); i++) {
+			for (size_t j = 0; j < std::get<1>(this->getSize()); j++) {
+				result[i][j] = this->cofactor(i, j);
+			}
+		}
+		result = result.transpose();
+		result.scl(1 / this->determinant());
+		return result;
+	}
+
+	size_t rank() const {
+		size_t rank = this->contents.size();
+		for (size_t i = 0; i < this->contents.size(); i++) {
+			for (size_t j = 0; j < this->contents.size(); j++) {
+				if (i != j && (*this)[i].divisibleBy((*this)[j])) {
+					rank--;
+				}
+			}
+		}
+		return rank;
+	}
 };
 
 template <typename K>

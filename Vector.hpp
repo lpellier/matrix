@@ -71,6 +71,19 @@ public:
 		return ret;
 	}
 
+	bool	divisibleBy(const Vector & rhs) const {
+		Vector ret(this->getSize());
+		for (size_t i = 0; i < this->getSize(); i++) {
+			ret[i] = (*this)[i] / rhs[i];
+		}
+		K test = ret[0];
+		for (size_t i = 0; i < this->getSize(); i++) {
+			if (ret[i] != test)
+				return false;
+		}
+		return true;
+	}
+
 	// accessors
 	size_t			getSize(void) const {
 		return this->contents.size();
@@ -153,6 +166,8 @@ public:
 	}
 };
 
+
+// ? could padd according to longest number in vec
 template <typename K>
 std::ostream & operator<<(std::ostream & os, const Vector<K> & vec) {
 	std::vector<K> contents = vec.contents;
