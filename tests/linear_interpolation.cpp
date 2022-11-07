@@ -18,7 +18,7 @@ int main() {
 		std::cout << lerp<float>(0.0, 1.0, 1.0) << std::endl;
 		std::cout << lerp<float>(0.0, 1.0, 0.5) << std::endl;
 		std::cout << lerp<float>(21.0, 42.0, 0.3) << std::endl;
-		std::cout << lerp<Vector<float>>(v1, v2, 0.3) << std::endl;
+		std::cout << lerp<Vector<float>>(v1, v2, 0.3) << std::endl << std::endl;
 
 		float * n6[] = {n1, n3};
 		float * n7[] = {n4, n5};

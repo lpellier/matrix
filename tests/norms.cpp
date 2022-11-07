@@ -1,7 +1,7 @@
 #include "./../general.hpp"
 
 int main() {
-	{
+	{	std::cout << "Norms of a Vector" << std::endl;
 		float n1[] = {0.0, 0.0, 0.0};
 		float n2[] = {1.0, 2.0, 3.0};
 		float n3[] = {-1.0, -2.0};

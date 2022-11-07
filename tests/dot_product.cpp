@@ -2,6 +2,7 @@
 
 int main() {
 	{
+		std::cout << "Dot product of two Vectors" << std::endl;
 		float n1[] = {0.0, 0.0};
 		float n2[] = {1.0, 1.0};
 		float n3[] = {-1.0, 6.0};

@@ -29,7 +29,7 @@ int main() {
 		v.push_back(v2);
 		v_coeffs.push_back(10);
 		v_coeffs.push_back(-2);
-		std::cout << linear_combination<float>(e, e_coeffs) << std::endl;
+		std::cout << linear_combination<float>(e, e_coeffs) << std::endl << std::endl;
 		std::cout << linear_combination<float>(v, v_coeffs) << std::endl;
 	}
 	exit(0);

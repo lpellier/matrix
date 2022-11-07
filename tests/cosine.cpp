@@ -2,6 +2,7 @@
 
 int main() {
 	{
+		std::cout << "Cosine of two Vectors" << std::endl;
 		float n1[] = {1.0, 0.0};
 		float n2[] = {0.0, 1.0};
 		float n3[] = {-1.0, 1.0};

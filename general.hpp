@@ -11,11 +11,10 @@
 #include "Vector.hpp"
 
 template <typename K>
-Vector<K>	linear_combination(std::vector<Vector<K>> vecs, std::vector<K> coefs) {
+Vector<K>	linear_combination(const std::vector<Vector<K>> & vecs, const std::vector<K> & coefs) {
 	Vector<K> ret(vecs[0].contents.size());
 	for (size_t i = 0; i < coefs.size(); i++) {
-		vecs[i].scl(coefs[i]);
-		ret.add(vecs[i]);
+		ret.add(vecs[i] * coefs[i]);
 	}
 	return ret;
 }

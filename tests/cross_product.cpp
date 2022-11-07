@@ -17,9 +17,9 @@ int main() {
 		Vector<float>	v5(3, n5);
 		Vector<float>	v6(3, n6);
 		
-		std::cout << cross_product(v1, v2) << std::endl;
-		std::cout << cross_product(v3, v4) << std::endl;
-		std::cout << cross_product(v5, v6) << std::endl;
+		std::cout << cross_product(v1, v2) << std::endl << std::endl;
+		std::cout << cross_product(v3, v4) << std::endl << std::endl;
+		std::cout << cross_product(v5, v6) << std::endl << std::endl;
 	}
 	exit(0);
 }

@@ -2,7 +2,7 @@
 
 int main() {
 	{
-		std::cout << "Reduced Row Echelon Form of a Matrix" << std::endl;
+		std::cout << "Inverse of a Matrix" << std::endl;
 		float	_n1[] = {1.0, 0.0, 0.0};
 		float	_n2[] = {0.0, 1.0, 0.0};
 		float	_n3[] = {0.0, 0.0, 1.0};

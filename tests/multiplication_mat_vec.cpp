@@ -19,9 +19,9 @@ int main() {
 		Matrix<float>	m3 = Matrix<float>(2, 2, n10);
 		Vector<float>	v1 = Vector<float>(2, n4);
 
-		std::cout << m1.mul_vec(v1) << std::endl;
-		std::cout << m2.mul_vec(v1) << std::endl;
-		std::cout << m3.mul_vec(v1) << std::endl;
+		std::cout << m1.mul_vec(v1) << std::endl << std::endl;
+		std::cout << m2.mul_vec(v1) << std::endl << std::endl;
+		std::cout << m3.mul_vec(v1) << std::endl << std::endl;
 	}
 	exit(0);
 }

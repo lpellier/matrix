@@ -19,10 +19,10 @@ public:
 	Matrix(const array & contents) {
 		this->contents = array(contents);
 	}
-	Matrix(size_t rows, size_t cols) {
+	Matrix(const size_t & rows, const size_t & cols) {
 		this->contents = array(rows, Vector<K>(cols));
 	}
-	Matrix(size_t rows, size_t cols, K * contents[]) {
+	Matrix(const size_t & rows, const size_t & cols, K * contents[]) {
 		this->contents = array();
 		for (size_t i = 0; i < rows; i++) {
 			Vector<K>	cur(cols, contents[i]);
@@ -115,14 +115,14 @@ public:
 		for (size_t i = 0; i < vec_size; i++) {
 			K coordinate = K();
 			for (size_t j = 0; j < (*this)[i].getSize(); j++) {
-				coordinate += (*this)[i][j] * vec[j];
+				coordinate = static_cast<K>(std::fma((*this)[i][j], vec[j], coordinate));
 			}
 			result[i] = coordinate;
 		}
 		return result;
 	}
 	
-	Vector<K>	get_vertical_vector_at_index(size_t index) const {
+	Vector<K>	get_vertical_vector_at_index(const size_t & index) const {
 		Vector<K> ret(this->contents.size());
 
 		for (size_t i = 0; i < this->contents.size(); i++) {
@@ -274,7 +274,7 @@ public:
 			return K();
 	}
 
-	K	cofactor(size_t i, size_t j) const {
+	K	cofactor(const size_t & i, const size_t & j) const {
 		Matrix deleted(std::get<0>(this->getSize()) - 1, std::get<1>(this->getSize()) - 1);
 		size_t row_index = 0;
 		size_t col_index = 0;
@@ -311,13 +311,11 @@ public:
 	}
 
 	size_t rank() const {
-		size_t rank = this->contents.size();
-		for (size_t i = 0; i < this->contents.size(); i++) {
-			for (size_t j = 0; j < this->contents.size(); j++) {
-				if (i != j && (*this)[i].divisibleBy((*this)[j])) {
-					rank--;
-				}
-			}
+		Matrix reduced = this->row_echelon();
+		size_t rank = 0;
+		for (size_t i = 0; i < reduced.contents.size(); i++) {
+			if (!reduced[i].isZeroVector())
+				rank++;
 		}
 		return rank;
 	}
@@ -326,11 +324,23 @@ public:
 template <typename K>
 std::ostream & operator<<(std::ostream & os, const Matrix<K> & mat) {
 	std::vector<Vector<K>> contents = mat.contents;
+	size_t len = 0;
+	for (size_t i = 0; i < contents.size(); i++) {
+		for (size_t j = 0; j < contents[i].getSize(); j++) {
+			std::string convert = std::to_string(contents[i][j]);
+			if (convert.length() > len)
+				len = convert.length();
+		}
+	}
 	if (contents.size() == 0)
-		os << "[]" << std::endl;
+		os << "[ ]" << std::endl;
 	else {
 		for (size_t i = 0; i < contents.size(); i++) {
-			os << contents[i];
+			os << "[ ";
+			for (size_t j = 0; j < contents[i].getSize(); j++) {
+				os << std::setw(len / 2) << contents[i][j] << std::setw(len / 2) << " ";
+			}
+			os << "]" << std::endl;
 		}
 	}
 	return os;

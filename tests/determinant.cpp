@@ -1,8 +1,10 @@
 #include "./../general.hpp"
 
+// !
+
 int main() {
 	{
-		std::cout << "Reduced Row Echelon Form of a Matrix" << std::endl;
+		std::cout << "Determinant of a Matrix" << std::endl;
 		float	_n1[] = {1.0, -1.0};
 		float	_n2[] = {-1.0, 1.0};
 		float *	n3[] = {_n1, _n2};

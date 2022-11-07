@@ -71,17 +71,20 @@ public:
 		return ret;
 	}
 
-	bool	divisibleBy(const Vector & rhs) const {
-		Vector ret(this->getSize());
+	bool	contains(K value) {
 		for (size_t i = 0; i < this->getSize(); i++) {
-			ret[i] = (*this)[i] / rhs[i];
+			if ((*this)[i] == value)
+				return true;
 		}
-		K test = ret[0];
+		return false;
+	}
+
+	bool	isZeroVector() {
 		for (size_t i = 0; i < this->getSize(); i++) {
-			if (ret[i] != test)
+			if ((*this)[i] != 0)
 				return false;
 		}
-		return true;
+		return true;	
 	}
 
 	// accessors
@@ -127,7 +130,7 @@ public:
 	K		dot(const Vector & v) const {
 		K result = 0;
 		for (size_t i = 0; i < this->contents.size(); i++) {
-			result += this->contents[i] * v.contents[i];
+			result = static_cast<K>(std::fma(this->contents[i], v.contents[i], result));
 		}
 		return result;
 	}
@@ -139,7 +142,7 @@ public:
 		float result = 0;
 
 		for (size_t i = 0; i < this->contents.size(); i++) {
-			result += abs(this->contents[i]);
+			result += std::abs(this->contents[i]);
 		}
 		return result;
 	}
@@ -148,9 +151,9 @@ public:
 	float	norm() const {
 		float result = 0;
 		for (size_t i = 0; i < this->contents.size(); i++) {
-			result += pow(this->contents[i], 2);
+			result += std::pow(this->contents[i], 2);
 		}
-		result = sqrt(result);
+		result = std::sqrt(result);
 		return result;
 	}
 	// supremum norm
@@ -158,8 +161,8 @@ public:
 	float	norm_inf() const {
 		float result = 0;
 		for (size_t i = 0; i < this->contents.size(); i++) {
-			if (abs(this->contents[i]) > result) {
-				result = abs(this->contents[i]);
+			if (std::abs(this->contents[i]) > result) {
+				result = std::abs(this->contents[i]);
 			}
 		}
 		return result;
@@ -171,10 +174,16 @@ public:
 template <typename K>
 std::ostream & operator<<(std::ostream & os, const Vector<K> & vec) {
 	std::vector<K> contents = vec.contents;
+	size_t len = 0;
+	for (typename std::vector<K>::const_iterator ite = contents.begin(); ite != contents.end(); ite++) {
+		std::string convert = std::to_string(*ite);
+		if (convert.length() > len)
+			len = convert.length();
+	}
 	os << "[ ";
 	for (typename std::vector<K>::const_iterator ite = contents.begin(); ite != contents.end(); ite++) {
-		os << *ite << " ";
+		os << std::setw(len / 2) << *ite << std::setw(len / 2) << " ";
 	}
-	os << "]" << std::endl;
+	os << "]";
 	return os;
 }

@@ -2,7 +2,7 @@
 
 int main() {
 	{
-		std::cout << "Reduced Row Echelon Form of a Matrix" << std::endl;
+		std::cout << "Rank of a Matrix" << std::endl;
 		float	_n4[] = {1.0, 0.0, 0.0};
 		float	_n5[] = {0.0, 1.0, 0.0};
 		float	_n6[] = {0.0, 0.0, 1.0};
@@ -14,7 +14,7 @@ int main() {
 		float	_n12[] = {8.0, 5.0, -2.0};
 		float	_n13[] = {4.0, 7.0, 20.0};
 		float	_n14[] = {7.0, 6.0, 1.0};
-		float	_n15[] = {21.0, 18.0, 7.0};
+		float	_n15[] = {21.0, 18.0, 3.0};
 		float *	n16[] = {_n12, _n13, _n14, _n15};
 		
 		Matrix<float>	m1 = Matrix<float>(3, 3, n7);
