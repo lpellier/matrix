@@ -11,7 +11,7 @@ These classes contain helper methods such as transpose, determinant, inverse etc
 
 It also provides operator overloads for scaling, adding, substracting and multiplying vectors and matrices.
 
-I also wrote a test scripts with unit tests to make sure everything's right.
+I also wrote a test script with unit tests to make sure everything's right.
 
 ### Installation
 `git clone https://github.com/lpellier/matrix.git && cd matrix`
